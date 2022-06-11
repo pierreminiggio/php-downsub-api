@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Service\ActionRunner;
+use Benlipp\SrtParser\Parser;
 use PierreMiniggio\ConfigProvider\ConfigProvider;
 
 class App
@@ -98,9 +99,9 @@ class App
             return;
         }
 
-        $subtitles = [];
+        $languagesAndSubtitles = [];
 
-        $cacheFolder = $projectFolder . 'cache' . DIRECTORY_SEPARATOR;
+        $cacheFolder = $this->projectFolder . 'cache' . DIRECTORY_SEPARATOR;
 
         foreach ($jsonResponse as $entry) {
             $language = $entry['language'] ?? null;
@@ -140,9 +141,29 @@ class App
                 continue;
             }
 
-            // TODO PARSE SRT
+            $parser = new Parser();
+            $parser->loadFile($subtitleFileName);
+            $captions = $parser->parse();
+
+            $subtitles = [];
+
+            foreach ($captions as $caption) {
+                $subtitles[] = [
+                    'startTime' => $caption->startTime,
+                    'endTime' => $caption->endTime,
+                    'text' => $caption->text
+                ];
+            }
+
+            $languagesAndSubtitles[] = [
+                'language' => $languageName,
+                'subtitles' => $subtitles
+            ];
+
+            unlink($subtitleFileName);
         }
 
         http_response_code(200);
+        echo json_encode($languagesAndSubtitles);
     }
 }

@@ -15,6 +15,7 @@
         "sort-packages": true
     },
     "require": {
+        "benlipp/srt-parser": "^1.1",
         "pierreminiggio/config-provider": "^1.0",
         "pierreminiggio/github-action-run-starter-and-artifact-downloader": "^2.0"
     }
