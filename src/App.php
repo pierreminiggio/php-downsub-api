@@ -77,7 +77,7 @@ class App
         $projects = $config['captchaProjects'];
         $project = $projects[array_rand($projects)];
 
-        set_time_limit(780);
+        set_time_limit(1200);
         $response = trim($this->runner->run(
             $project['token'],
             $project['account'],
@@ -126,7 +126,7 @@ class App
 
             $fp = fopen($subtitleFileName, 'w+');
             $subtitleCurlResponse = curl_init($subtitleFileUrl);
-            curl_setopt($subtitleCurlResponse, CURLOPT_TIMEOUT, 50);
+            curl_setopt($subtitleCurlResponse, CURLOPT_TIMEOUT, 600);
             curl_setopt($subtitleCurlResponse, CURLOPT_FILE, $fp);
             curl_setopt($subtitleCurlResponse, CURLOPT_FOLLOWLOCATION, true);
             curl_exec($subtitleCurlResponse);
